@@ -3,15 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:buyback_module/buyback_module.dart';
 
 void main() {
-  testWidgets('Buyback module loads welcome screen', (WidgetTester tester) async {
+  testWidgets('Buyback module loads home screen', (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp(
+      const MaterialApp(
         home: BuybackModule(
           config: BuybackConfig(appName: "TestApp"),
         ),
       ),
     );
 
-    expect(find.text("Welcome to Buyback Module in TestApp 🚀"), findsOneWidget);
+    // Wait for UI to build properly
+    await tester.pumpAndSettle();
+
+    // ✅ Check AppBar title (based on your HomePage)
+    expect(find.text("Buyback - TestApp"), findsOneWidget);
   });
 }
