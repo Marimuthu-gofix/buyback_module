@@ -33,6 +33,12 @@ dev_dependencies:
 flutter:
 
   # To add assets to your package, add an assets section, like this:
+  assets:
+    - Images/sliders/slider1.png
+    - Images/sliders/slider2.png
+    - Images/store-locator/
+    - Images/Evaluation/Icons/
+    - Images/
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
