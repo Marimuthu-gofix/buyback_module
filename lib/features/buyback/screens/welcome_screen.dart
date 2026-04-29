@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+// 👉 import your home screen
+import '../Pages/home.dart'; // adjust path if needed
+
 class BuybackWelcomeScreen extends StatelessWidget {
   final String appName;
 
@@ -12,9 +15,22 @@ class BuybackWelcomeScreen extends StatelessWidget {
         title: const Text("Buyback Module"),
       ),
       body: Center(
-        child: Text(
-          "Welcome to Buyback Module in $appName 🚀",
-          style: const TextStyle(fontSize: 18),
+        child: InkWell(
+          onTap: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => home(), // or HomePage(config: ...)
+              ),
+            );
+          },
+          child: Text(
+            "Welcome to Buyback Module in $appName 🚀",
+            style: const TextStyle(
+              fontSize: 18,
+              decoration: TextDecoration.underline, // optional UI hint
+            ),
+          ),
         ),
       ),
     );
