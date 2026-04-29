@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
-import 'features/buyback/screens/welcome_screen.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+
+// ✅ UPDATED IMPORTS (based on your new structure)
+import 'features/buyback/Pages/home.dart';
+import 'features/buyback/Providers/evaluation_provider.dart';
+import 'features/buyback/Providers/selection_provider.dart';
 
 class BuybackConfig {
   final String appName;
 
-  BuybackConfig({required this.appName});
+  const BuybackConfig({
+    required this.appName,
+  });
 }
 
 class BuybackModule extends StatelessWidget {
@@ -14,8 +22,27 @@ class BuybackModule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BuybackWelcomeScreen(
-      appName: config.appName,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => EvaluationProvider()),
+        ChangeNotifierProvider(create: (_) => SelectionProvider()),
+      ],
+      child: ScreenUtilInit(
+        designSize: const Size(375, 812),
+        minTextAdapt: true,
+        splitScreenMode: true,
+
+        builder: (context, child) {
+          // ❗ REPLACED MaterialApp with Navigator
+          return Navigator(
+            onGenerateRoute: (settings) {
+              return MaterialPageRoute(
+                builder: (_) => home(), // your original home()
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
