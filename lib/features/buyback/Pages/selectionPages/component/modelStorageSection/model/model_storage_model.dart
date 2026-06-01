@@ -1,36 +1,38 @@
 import 'dart:convert';
 
-class ModelStorageModel {
+class GetModelAttributeModel {
   final bool success;
   final int count;
-  final List<Datum> data;
+  final List<AttributeData> data;
 
-  ModelStorageModel({
+  GetModelAttributeModel({
     required this.success,
     required this.count,
     required this.data,
   });
 
-  factory ModelStorageModel.fromRawJson(String str) =>
-      ModelStorageModel.fromJson(json.decode(str));
+  factory GetModelAttributeModel.fromRawJson(String str) =>
+      GetModelAttributeModel.fromJson(json.decode(str));
 
-  factory ModelStorageModel.fromJson(Map<String, dynamic> json) {
-    return ModelStorageModel(
+  factory GetModelAttributeModel.fromJson(Map<String, dynamic> json) {
+    return GetModelAttributeModel(
       success: json["success"] ?? false,
       count: json["count"] ?? 0,
       data: json["data"] == null
           ? []
-          : List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+          : List<AttributeData>.from(
+              json["data"].map((x) => AttributeData.fromJson(x)),
+            ),
     );
   }
 }
 
-class Datum {
-  final String specValue;
+class AttributeData {
+  final String spec;
 
-  Datum({required this.specValue});
+  AttributeData({required this.spec});
 
-  factory Datum.fromJson(Map<String, dynamic> json) {
-    return Datum(specValue: json["spec_value"]?.toString() ?? "");
+  factory AttributeData.fromJson(Map<String, dynamic> json) {
+    return AttributeData(spec: json["spec"]?.toString() ?? "");
   }
 }

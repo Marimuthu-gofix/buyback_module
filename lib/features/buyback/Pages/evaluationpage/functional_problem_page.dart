@@ -1,19 +1,36 @@
 import 'package:buyback_module/features/buyback/Pages/evaluationpage/widgets/bottom_nav_button.dart';
 import 'package:buyback_module/features/buyback/Pages/evaluationpage/widgets/evaluation_header_card.dart';
-import 'package:buyback_module/features/buyback/Pages/evaluationpage/widgets/problem_issue_card.dart';
+import 'package:buyback_module/features/buyback/Pages/evaluationpage/widgets/problem_grid_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../Providers/evaluation_provider.dart';
 import '../../shared/Color/app_colors.dart';
 import 'accessories_page.dart';
 import 'package:provider/provider.dart';
+import 'model/question_model.dart';
 
 class FunctionalProblemPage extends StatefulWidget {
   final String itemname;
   final String imageUrl;
+
+  /// ✅ DYNAMIC VALUES
+  final String itemCode;
+  final String brand;
+  final String imeiSerial;
+  final String company;
+  final String itemGroup;
+  final String variant;
+
   const FunctionalProblemPage({
     super.key,
     required this.itemname,
     required this.imageUrl,
+    required this.itemCode,
+    required this.brand,
+    required this.imeiSerial,
+    required this.company,
+    required this.itemGroup,
+    required this.variant,
   });
 
   @override
@@ -21,104 +38,60 @@ class FunctionalProblemPage extends StatefulWidget {
 }
 
 class _FunctionalProblemPageState extends State<FunctionalProblemPage> {
-  /// Store selected problems
-  final Set<int> selectedProblems = {};
-
-  /// STATIC DATA (Replace later if needed)
-  final List<Map<String, dynamic>> problems = [
-    {
-      "id": 1,
-      "text": "Front Camera not working",
-      "img": "Images/Evaluation/Icons/1.png",
-    },
-    {
-      "id": 2,
-      "text": "Back Camera not working",
-      "img": "Images/Evaluation/Icons/2.png",
-    },
-    {
-      "id": 3,
-      "text": "Volume Button not working",
-      "img": "Images/Evaluation/Icons/3.png",
-    },
-    {
-      "id": 4,
-      "text": "Finger Touch not working",
-      "img": "Images/Evaluation/Icons/4.png",
-    },
-    {
-      "id": 5,
-      "text": "WiFi not working",
-      "img": "Images/Evaluation/Icons/5.png",
-    },
-    {
-      "id": 6,
-      "text": "Battery Faulty",
-      "img": "Images/Evaluation/Icons/17.png",
-    },
-    {"id": 7, "text": "Speaker Faulty", "img": "Images/Evaluation/Icons/6.png"},
-    {
-      "id": 8,
-      "text": "Power Button not working",
-      "img": "Images/Evaluation/Icons/9.png",
-    },
-    {
-      "id": 9,
-      "text": "Charging Port not working",
-      "img": "Images/Evaluation/Icons/7.png",
-    },
-    {
-      "id": 10,
-      "text": "Face Sensor not working",
-      "img": "Images/Evaluation/Icons/8.png",
-    },
-    {
-      "id": 11,
-      "text": "Silent Button not working",
-      "img": "Images/Evaluation/Icons/10.png",
-    },
-    {
-      "id": 12,
-      "text": "Audio Receiver not working",
-      "img": "Images/Evaluation/Icons/11.png",
-    },
-    {
-      "id": 13,
-      "text": "Camera Glass Broken",
-      "img": "Images/Evaluation/Icons/12.png",
-    },
-  ];
+  /// ✅ STORE SELECTED
+  final Map<int, bool> selectedMap = {};
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<EvaluationProvider>();
+
+    final List<QuestionModel> questions = provider.functionalQuestions;
+
+    if (provider.isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (questions.isEmpty) {
+      return const Scaffold(
+        body: Center(child: Text("No Functional Data Found")),
+      );
+    }
+
+    /// ✅ SAME UI LIKE ACCESSORIES
+    final Map<String, String> functionalOptions = {
+      for (var q in questions) q.questionText: "Images/Evaluation/Icons/1.png",
+    };
+
     return WillPopScope(
       onWillPop: () async {
-        context.read<EvaluationProvider>()
-            .sections["Functional Problems"]
-            ?.clear();
-
-        context.read<EvaluationProvider>().notifyListeners();
+        context.read<EvaluationProvider>().clearSection("Functional Problems");
 
         return true;
       },
+
       child: Scaffold(
         backgroundColor: AppColors.surfaceDark,
 
-        /// APP BAR
         appBar: AppBar(
           backgroundColor: Colors.black,
           elevation: 0,
+
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back_ios_new_rounded,
               color: Colors.white,
               size: 20,
             ),
+
             onPressed: () {
-              context.read<EvaluationProvider>().clearSection("Functional Problems");
+              context.read<EvaluationProvider>().clearSection(
+                "Functional Problems",
+              );
+
               Navigator.pop(context);
             },
           ),
+
           title: const Text(
             "Your Device",
             style: TextStyle(
@@ -129,16 +102,17 @@ class _FunctionalProblemPageState extends State<FunctionalProblemPage> {
           ),
         ),
 
-        /// BODY (NO FutureBuilder)
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
+
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+
             children: [
-              /// HEADER (STATIC)
+              /// ✅ HEADER
               EvaluationHeaderCard(
                 itemname: widget.itemname,
-                variant: "(128GB)",
+                variant: "",
                 imageUrl: widget.imageUrl,
                 progress: 0.55,
                 selectedAnswers: {},
@@ -146,78 +120,105 @@ class _FunctionalProblemPageState extends State<FunctionalProblemPage> {
 
               const SizedBox(height: 20),
 
-              const Text(
+              Text(
                 "Functional or Physical Problems",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),
 
               const SizedBox(height: 16),
 
-              /// GRID OF ISSUES (STATIC)
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: problems.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: 0.90,
-                ),
-                itemBuilder: (context, index) {
-                  final problem = problems[index];
-                  final isSelected = selectedProblems.contains(problem["id"]);
+              /// ✅ PROBLEM GRID CARD
+              ProblemGridCard(
+                options: functionalOptions,
 
-                  return ProblemIssueCard(
-                    title: problem["text"] ?? "",
-                    isSelected: isSelected,
-                    iconPath: problem["img"] ?? "",
-                    onTap: () {
-                      setState(() {
-                        if (isSelected) {
-                          selectedProblems.remove(problem["id"]);
+                selectedItems: selectedMap.entries
+                    .where((e) => e.value)
+                    .map((e) => questions[e.key].questionText)
+                    .toSet(),
 
-                          /// ❌ REMOVE from provider
-                          context.read<EvaluationProvider>()
-                              .sections["Functional Problems"]
-                              ?.remove(problem["text"]);
-                        } else {
-                          selectedProblems.add(problem["id"]);
-
-                          /// ✅ ADD to provider
-                          context.read<EvaluationProvider>().updateAnswer(
-                            "Functional Problems",
-                            problem["text"],
-                            "Issue",
-                          );
-                        }
-                      });
-                    },
+                onToggle: (questionText) {
+                  final index = questions.indexWhere(
+                    (e) => e.questionText == questionText,
                   );
+
+                  final q = questions[index];
+
+                  final isSelected = selectedMap[index] ?? false;
+
+                  /// ✅ QUESTION TYPE
+                  final isSingleSelect =
+                      q.questionType.toLowerCase() == "single select";
+
+                  setState(() {
+                    if (isSingleSelect) {
+                      selectedMap.clear();
+
+                      selectedMap[index] = true;
+                    } else {
+                      if (isSelected) {
+                        selectedMap.remove(index);
+
+                        /// REMOVE FROM PROVIDER
+                        context
+                            .read<EvaluationProvider>()
+                            .sections["Functional Problems"]
+                            ?.removeWhere(
+                              (e) =>
+                                  e["question_id"] ==
+                                  "${q.questionName}_$index",
+                            );
+                      } else {
+                        selectedMap[index] = true;
+                      }
+                    }
+                  });
+
+                  /// STORE ONLY WHEN SELECTED
+                  if (!isSelected || isSingleSelect) {
+                    context.read<EvaluationProvider>().updateAnswer(
+                      "Functional Problems",
+                      q.questionText,
+                      "${q.questionName}_$index",
+                      q.options.isNotEmpty
+                          ? q.options.first.optionValue
+                          : q.questionName,
+                      q.options.isNotEmpty
+                          ? q.options.first.optionLabel
+                          : q.questionText,
+                    );
+                  }
                 },
               ),
-
-              const SizedBox(height: 90),
             ],
           ),
         ),
 
-        /// NEXT BUTTON
+        /// ✅ NEXT BUTTON
         bottomNavigationBar: BottomNavButton(
           text: "Next →",
+
           onTap: () {
-            debugPrint("Final Issues: $selectedProblems");
+            debugPrint("Selected Functional: $selectedMap");
 
             Navigator.push(
               context,
+
               MaterialPageRoute(
                 builder: (_) => AccessoriesPage(
                   itemname: widget.itemname,
                   imageUrl: widget.imageUrl,
+
+                  /// ✅ PASS VALUES
+                  itemCode: widget.itemCode,
+                  brand: widget.brand,
+                  imeiSerial: widget.imeiSerial,
+                  company: widget.company,
+                  itemGroup: widget.itemGroup,
+                  variant: widget.variant,
                 ),
               ),
             );

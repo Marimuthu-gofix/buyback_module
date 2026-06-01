@@ -17,8 +17,7 @@ class ModelSelectionSearch extends StatefulWidget {
   });
 
   @override
-  State<ModelSelectionSearch> createState() =>
-      _ModelSelectionSearchState();
+  State<ModelSelectionSearch> createState() => _ModelSelectionSearchState();
 }
 
 class _ModelSelectionSearchState extends State<ModelSelectionSearch> {
@@ -74,8 +73,7 @@ class _ModelSelectionSearchState extends State<ModelSelectionSearch> {
                   hintStyle: const TextStyle(color: Colors.white54),
                   filled: true,
                   fillColor: Colors.grey.shade800,
-                  contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 12),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -101,8 +99,7 @@ class _ModelSelectionSearchState extends State<ModelSelectionSearch> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: 9,
-                gridDelegate:
-                const SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   crossAxisSpacing: 15,
                   mainAxisSpacing: 15,
@@ -135,9 +132,11 @@ class _ModelSelectionSearchState extends State<ModelSelectionSearch> {
 
             /// 🔍 Filter
             final models = allModels
-                .where((m) => m.modelName
-                .toLowerCase()
-                .contains(_searchQuery.toLowerCase()))
+                .where(
+                  (m) => m.modelName.toLowerCase().contains(
+                    _searchQuery.toLowerCase(),
+                  ),
+                )
                 .toList();
 
             /// ❌ No search result
@@ -155,8 +154,7 @@ class _ModelSelectionSearchState extends State<ModelSelectionSearch> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: models.length,
-              gridDelegate:
-              const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 crossAxisSpacing: 15,
                 mainAxisSpacing: 15,
@@ -201,8 +199,7 @@ class _ModelSelectionSearchState extends State<ModelSelectionSearch> {
                         Image.network(
                           imageUrl,
                           height: 50,
-                          errorBuilder: (_, __, ___) =>
-                          const Icon(Icons.image),
+                          errorBuilder: (_, __, ___) => const Icon(Icons.image),
                         ),
                         const SizedBox(height: 8),
                         Text(

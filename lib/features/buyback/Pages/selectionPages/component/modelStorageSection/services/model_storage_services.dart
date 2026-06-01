@@ -1,32 +1,37 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+
 import '../../../../../shared/api/api_config.dart';
-import '../model/model_storage_model.dart';
+
+import '../model/model_variant_model.dart';
 
 class ModelStorageService {
-  static Future<ModelStorageModel> fetchStorage(
-    int modelId,
-    String spec,
-  ) async {
-    final url = Uri.parse(
-      "${ApiConfig.baseUrl}/GetModelAttributeValues"
-      "?model_id=$modelId&spec=$spec",
-    );
+  static Future<ModelVariantModel> getModelVariants({
+    required int modelId,
+    required List<String> attributes,
+  }) async {
+    final url = Uri.parse("${ApiConfig.baseUrl}/GetModelVariants");
 
-    print("📤 REQUEST URL: $url");
+    final body = {"model_id": modelId, "attributes": attributes};
 
-    final response = await http.get(
+    print("POST BODY : ${jsonEncode(body)}");
+
+    final response = await http.post(
       url,
-      headers: {"accept": "application/json"},
+      headers: {
+        "accept": "application/json",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode(body),
     );
 
-    print("📥 STATUS: ${response.statusCode}");
-    print("📥 BODY: ${response.body}");
+    print("POST RESPONSE : ${response.body}");
 
     if (response.statusCode == 200) {
-      return ModelStorageModel.fromRawJson(response.body);
+      return ModelVariantModel.fromRawJson(response.body);
     } else {
-      throw Exception("Failed to load storage values");
+      throw Exception("Failed to load variants");
     }
   }
 }

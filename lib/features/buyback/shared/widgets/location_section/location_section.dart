@@ -373,20 +373,20 @@ class _LocationSectionState extends State<LocationSection>
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => Placeholder()),
-                ),
-                child: Text(
-                  "See all",
-                  style: TextStyle(
-                    color: const Color(0xFFFF64E6),
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: () => Navigator.push(
+              //     context,
+              //     MaterialPageRoute(builder: (_) => Placeholder()),
+              //   ),
+              //   child: Text(
+              //     "See all",
+              //     style: TextStyle(
+              //       color: const Color(0xFFFF64E6),
+              //       fontSize: 12.sp,
+              //       fontWeight: FontWeight.w500,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

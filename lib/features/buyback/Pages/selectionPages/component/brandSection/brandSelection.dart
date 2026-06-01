@@ -116,7 +116,7 @@ class _BrandSelectionSectionState extends State<BrandSelectionSection> {
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: _selectedBrandId == brand.brandId
-                            ? Colors.blue
+                            ? Color(0xFFFF64E6)
                             : const Color(0xFFFF64E6),
                       ),
                     ),

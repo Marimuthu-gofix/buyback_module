@@ -53,7 +53,7 @@ class _FaqSectionState extends State<FaqSection> {
             "Frequently Asked Questions",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 23.sp,
+              fontSize: 20.sp,
               fontWeight: FontWeight.bold,
             ),
           ),

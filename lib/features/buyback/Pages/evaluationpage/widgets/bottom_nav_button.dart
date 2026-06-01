@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../shared/Color/app_colors.dart';
 
@@ -11,8 +12,9 @@ class BottomNavButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      top: false,
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.fromLTRB(10, 10, 10, 20),
         color: Colors.black,
         child: SizedBox(
           height: 52,
@@ -28,7 +30,7 @@ class BottomNavButton extends StatelessWidget {
             child: Text(
               text,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 18.sp,
                 color: AppColors.textWhite,
                 fontWeight: FontWeight.w600,
               ),
